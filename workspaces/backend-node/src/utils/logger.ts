@@ -1,6 +1,6 @@
-import { als } from "@atlys/shared"
 import pino from "pino"
 import config from "../config"
+import { als } from "../app/core/fastifyPlugin"
 
 const logger = pino({
   name: config.name,

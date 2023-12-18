@@ -9,7 +9,7 @@ import config from "../config"
 import addFormats from "ajv-formats"
 import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox"
 import v1Routes from "./v1"
-import { fastifyPlugin } from "@atlys/shared"
+import { fastifyPlugin } from "./core/fastifyPlugin"
 
 export default async function initApp() {
   const app = Fastify({

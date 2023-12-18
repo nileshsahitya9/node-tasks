@@ -1,10 +1,12 @@
-import { FastifyError, FastifyReply, FastifyRequest } from "fastify"
-import { DecodedIdToken, getAuth } from "firebase-admin/auth"
-import logger from "../../utils/logger"
+import { FastifyReply, FastifyRequest } from "fastify"
+import { User } from "@prisma/client"
+import jwt from "jsonwebtoken"
+import config from "../../config"
+import prisma from "../../loaders/prisma"
 
 declare module "fastify" {
   interface FastifyRequest {
-    firebaseToken?: DecodedIdToken
+    user?: User
   }
 }
 
@@ -18,12 +20,25 @@ export default async function authRequiredHook(
   const [_, token] = authorization.split(" ")
   if (!token) return reply.unauthorized()
   try {
-    const decodedToken = await getAuth().verifyIdToken(token)
-    req.firebaseToken = decodedToken
-  } catch (error) {
-    if (error?.constructor?.name === "FirebaseAuthError") {
-      return reply.unauthorized()
+    const data = jwt.verify(token, config.jwt.tokenSecret) as {
+      type: string
+      data: string
     }
-    logger.error(error)
+    if (data && data.type === "AUTH_TOKEN") {
+      const id = Buffer.from(data.data, "base64").toString()
+      const deviceToken = await prisma.deviceToken.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          user: true,
+        },
+      })
+      console.log(deviceToken)
+      if (!deviceToken || deviceToken.disabled) return reply.unauthorized()
+      req.user = deviceToken.user
+    }
+  } catch (error) {
+    return reply.unauthorized()
   }
 }

@@ -8,7 +8,7 @@ export default withSchema({
   schema: {
     body: Type.Object({
       email: Type.String({ format: "email" }),
-      password: Type.String({ minLength: 8 }),
+      password: Type.String(),
     }),
   },
   async handler(req, reply) {
