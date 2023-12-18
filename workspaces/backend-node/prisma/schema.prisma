@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  password      String
+  name          String?
+  posts         Post[]
+  followers     Follow[]      @relation("follower")
+  following     Follow[]      @relation("following")
+  device_tokens DeviceToken[]
+}
+
+model DeviceToken {
+  id         String    @id @default(cuid())
+  user       User      @relation(fields: [user_id], references: [id])
+  user_id    String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  last_used  DateTime?
+  disabled   Boolean   @default(false)
+}
+
+model Follow {
+  id           String @id @default(cuid())
+  follower     User   @relation("follower", fields: [follower_id], references: [id])
+  follower_id  String
+  following    User   @relation("following", fields: [following_id], references: [id])
+  following_id String
+
+  @@unique([follower_id, following_id])
+}
+
+model Post {
+  id         String   @id @default(cuid())
+  title      String
+  content    String
+  author_id  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  author User @relation(fields: [author_id], references: [id])
+}
