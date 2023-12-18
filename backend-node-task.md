@@ -39,5 +39,5 @@ Here are the tasks that need to be completed:
 
 - [ ] Conduct a walkthrough of the codebase to understand its structure and functionality.
 - [ ] Review the codebase and make notes of areas that can be improved.
-- [ ] Optimize the /api/v1/posts/feed endpoint for better performance.
-- [ ] Implement the /api/v1/users/:id/follow endpoint to allow users to follow each other.
+- [ ] Optimize the `/api/v1/posts/feed` endpoint for better performance.
+- [ ] Implement the `/api/v1/users/:id/follow` endpoint to allow users to follow each other.
