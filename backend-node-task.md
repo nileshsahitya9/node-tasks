@@ -14,7 +14,13 @@ $ yarn
 2. Start the Docker services defined in the Docker Compose file by running:
 
 ```bash
-$ docker compose -f docker/compose.yml up -d
+$ docker compose -f docker/compose.yaml up -d
+```
+
+3. create a `.env` file in the `workspaces/backend` directory and add the following environment variables:
+
+```bash
+DATABASE_URL="DATABASE_URL="postgresql://atlys:changeme@localhost:5432/twipper?schema=public"
 ```
 
 3. Navigate to the backend workspace and generate the Prisma client
