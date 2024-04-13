@@ -1,4 +1,5 @@
 import prisma from "../../../../loaders/prisma";
+import logger from "../../../../utils/logger";
 import withSchema from "../../../core/withSchema";
 
 export default withSchema({
@@ -35,7 +36,7 @@ export default withSchema({
 
       return reply.code(201).send("Successfully followed user");
     } catch (error) {
-      console.error("Error following user:", error);
+      logger.error({error});
       return reply.internalServerError();
     }
   },
